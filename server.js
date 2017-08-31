@@ -43,22 +43,49 @@ var items = {
 
  application.post('/api/customer/items/:itemId/purchases', (request, response) => {
 
- var itemToPurchase = request.body.id;
-      
-        var item = items.data.filter(function(obj){
+      var itemToPurchase = request.body.id;
+      console.log(itemToPurchase);
+      console.log(request.body.id);
+      console.log(request.body.cost);
+      var item = items.data.filter(function(obj){
         return obj.id === itemToPurchase;
-    }
-    
-        if(itemToPurchase.data.cost == request.body.cost){
+    });
+        
+        if(request.body.cost >= item[0].cost){
 
+        console.log("item succesfully purchased");
+        console.log(item[0].cost);
+        purchasedItem = 
+        {
+           status: "success",
+            data: [
+            {
+            id: request.body.id,
+            description: request.body.description,
+            cost: request.body.cost,
+            quantity: 1
+            }
+            ]
         }
 
-     response.json(items);
-  });
+     response.json(purchasedItem);
+    }else{
+
+    var notEnoughMoney = {
+    status: "failure",
+    data: {
+        "money_submitted": request.body.cost,
+        "money_required": item[0].cost
+    }
+    }
+      response.json(notEnoughMoney);
+
+  }
+ });
 
 var purchases = {
-    "status": "success",
-    "data": [
+    status: "success",
+    data: [
 
                 {
                     timeOfPurchase:'2017-08-28 12:30:00',

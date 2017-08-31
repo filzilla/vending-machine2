@@ -167,3 +167,27 @@ describe("GET/api/vendor/purchases", function (done) {
      })
 
    })  
+
+describe("POST/api/customer/items/:id/purchases", function (done) {
+    it("should NOT purchase an item from the machine and respond with 'Failure'", function (done) {
+      request(application)
+         .post('/api/customer/items/:id/purchases') 
+        .send({  id: 1, description: 'snickers', cost: 0.50, quantity:1}) 
+         .expect(200)
+         .expect("Content-Type", "application/json; charset=utf-8")
+         .expect(function(response){
+          assert.deepEqual(response.body, {
+          status: "failure",
+            data: {
+                   "money_submitted": .50,
+                    "money_required": .80
+    
+            }
+           
+         })
+                   
+        })
+           .end(done);
+     })
+
+   })  
